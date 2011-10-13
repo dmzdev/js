@@ -350,6 +350,8 @@ namespace dmz {
          static V8Value _main_window_remove_dock_widget (const v8::Arguments &Args);
          static V8Value _main_window_add_menu (const v8::Arguments &Args);
          static V8Value _main_window_add_separator (const v8::Arguments &Args);
+         static V8Value _main_window_insert_menu (const v8::Arguments &Args);
+         static V8Value _main_window_insert_separator (const v8::Arguments &Args);
          static V8Value _main_window_window (const v8::Arguments &Args);
 
          // QDockWidget bindings implemented in JsModuleUiV8QtBasicDockWidget.cpp
@@ -880,6 +882,11 @@ namespace dmz {
          void _init_form_layout ();
 
          String _find_ui_file (const String &Name);
+
+         Boolean _find_main_window_action (
+            const QString &Menu,
+            const QString &Action);
+
          void _init (Config &local);
 
          Log _log;

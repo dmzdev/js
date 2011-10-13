@@ -16,6 +16,7 @@
 #include <QtGui/QDockWidget>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QLineEdit>
+#include <QtGui/QMenu>
 #include <QtGui/QMainWindow>
 #include <QtUiTools/QUiLoader>
 
@@ -1428,6 +1429,47 @@ dmz::JsModuleUiV8QtBasic::_find_ui_file (const String &Name) {
    if (!find_file (_searchPaths, Name, result)) {
 
       find_file (_searchPaths, Name + ".ui", result);
+   }
+
+   return result;
+}
+
+
+dmz::Boolean
+dmz::JsModuleUiV8QtBasic::_find_main_window_action (
+      const QString &Menu,
+      const QString &Action) {
+
+   Boolean result (dmz::False);
+
+   const QString Key (Menu + Action);
+
+   if (_menuActionMap.contains (Key)) {
+
+      result = dmz::True;
+   }
+   else if (_state.mainWindowModule) {
+
+      QMenu *menu (_state.mainWindowModule->lookup_menu (qPrintable (Menu)));
+
+      if (menu) {
+
+         QList<QAction *> actionList (menu->actions ());
+
+         for (QList<QAction *>::iterator it (actionList.begin ());
+              it != actionList.end () && !result;
+              it++) {
+
+            if ((*it)->text () == Action) {
+
+               const QString Key (Menu + (*it)->text ());
+
+               _menuActionMap[Key] = (*it);
+
+               result = dmz::True;
+            }
+         }
+      }
    }
 
    return result;
